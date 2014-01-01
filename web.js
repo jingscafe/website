@@ -3,7 +3,9 @@ var app = express();
 app.use(express.logger());
 
 app.get('/', function(request, response) {
-  response.send('my cafe website +1')
+  response.send(
+	fs.readFileSync("index.html").toString()
+  )
 });
 
 var port = process.env.PORT || 8080;
