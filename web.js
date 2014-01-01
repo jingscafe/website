@@ -4,7 +4,7 @@ app.use(express.logger());
 
 app.get('/', function(request, response) {
   response.send(
-    'Test2 Key My first webiste!!'
+    string(fs.readFileSync('index.html'))
   )
 });
 
