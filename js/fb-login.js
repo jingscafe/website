@@ -11,30 +11,18 @@
   // whenever someone who was previously logged out tries to log in again, the correct case below 
   // will be handled. 
   FB.Event.subscribe('auth.authResponseChange', function(response) {
-    // Here we specify what we do with the response anytime this event occurs. 
     if (response.status === 'connected') {
-    } else if (response.status === 'not_authorized') {
+    	showLoggedInView();
     } else {
+    	showLoggedOutView();
     }
   });
  
   FB.getLoginStatus(function(response) {
   if (response.status === 'connected') {
-    FB.api('/me/picture', function(response) {
-			document.getElementById("login-block").innerHTML=
-    	  '<img src="' + response.data.url +'"/>' +
-    	  '<a href="#" onclick="return logout();">Log Out</a>' + ' ';
-    });
-  } else if (response.status === 'not_authorized') {
-    debugger
-    // the user is logged in to Facebook, 
-    // but has not authenticated your app
+    showLoggedInView();
   } else {
-    document.getElementById("login-block").innerHTML=
-      '<img src="../../images/FB-f-Logo__blue_50.png" />' + ' ' +
-      '<a href="#" onclick="return login();">Log In</a>';
-
-    // the user isn't logged in to Facebook.
+    showLoggedOutView();
   }
   
   });
@@ -52,18 +40,28 @@
 
   function login() {
 		FB.login(function(response) {
-    	FB.api('/me/picture', function(response) {
- 				document.getElementById("login-block").innerHTML=
-    	  '<img src="' + response.data.url +'"/>' + ' ' +
-    	  '<a href="#" onclick="return logout();">Log Out</a>';
-  		});
+  		showLoggedInView();
 		}); 
   }
 
+  function showLoggedInView() {
+    FB.api('/me/picture', function(response) {
+ 			document.getElementById("login-block").innerHTML=
+      '<img src="' + response.data.url +'"/>' + ' ' +
+      '<a href="#" onclick="logout();">Log Out</a>';
+  	});
+	}
+
   function logout() {
-		FB.logout();
+		FB.logout(function(response) {
+  		showLoggedOutView();
+		}); 
+  }
+
+  function showLoggedOutView() {
     document.getElementById("login-block").innerHTML=
       '<img src="../../images/FB-f-Logo__blue_50.png" />' + ' ' +
-      '<a href="#" onclick="return login();">Log In</a>';
+      '<a href="#" onclick="login();">Log In</a>';
   }
+
 
