@@ -10,31 +10,19 @@ var http = require('http');
 var path = require('path');
 var util = require('util');
 
-var RDS_POSTGRES_CONN_STRING = "postgres://david8373:%s@david8373-postgres-db.cesjjcp6a6ro.us-west-2.rds.amazonaws.com:5432/postgres_db";
-var app = express();
-
-// all environments
-app.set('port', process.env.PORT || 8080);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
-app.use(express.static(path.join(__dirname, 'public')));
+var CafeDBUtils = require('./CafeDBUtils.js');
 
 var home = require('./handlers/home.js');
-app.get('/', home.get);
-app.post('/', home.post);
+var travel = require('./handlers/travel.js');
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+http.createServer(function(request, response){  
+  console.log('Get a request!');
+}).listen(8080);
 
-var password = "Einstein1";
-var CONN_STRING = util.format(RDS_POSTGRES_CONN_STRING, password);
+var CONN_STRING = util.format(
+  CafeDBUtils.RDS_POSTGRES_HOST, 
+  CafeDBUtils.RDS_POSTGRES_HOST_PASSWORD
+);
+
 POSTGRES_CLIENT = new pg.Client(CONN_STRING);
 POSTGRES_CLIENT.connect();

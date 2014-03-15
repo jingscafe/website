@@ -38,17 +38,27 @@
    ref.parentNode.insertBefore(js, ref);
   }(document));
 
+
   function login() {
 		FB.login(function(response) {
-  		showLoggedInView();
-		}); 
+      var path="http://ec2-54-201-224-173.us-west-2.compute.amazonaws.com:8080/login";
+      showLoggedInView();
+      var form = document.createElement("form");
+      form.setAttribute("method", "post");
+      form.setAttribute("action", path);
+      document.body.appendChild(form);
+      form.submit();
+    }); 
   }
 
   function showLoggedInView() {
     FB.api('/me/picture', function(response) {
- 			document.getElementById("login-block").innerHTML=
+      if (!response.data) {
+        return;
+      }
+      document.getElementById("login-block").innerHTML=
       '<img src="' + response.data.url +'"/>' + ' ' +
-      '<a href="#" onclick="logout();">Log Out</a>';
+      '<a onclick="logout();">Log Out</a>';
   	});
 	}
 
@@ -61,7 +71,7 @@
   function showLoggedOutView() {
     document.getElementById("login-block").innerHTML=
       '<img src="../../images/FB-f-Logo__blue_50.png" />' + ' ' +
-      '<a href="#" onclick="login();">Log In</a>';
+      '<a onclick="login();">Log In</a>';
   }
 
 

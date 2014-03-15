@@ -1,8 +1,8 @@
 
 exports.get = function(req, res) {
-console.log('Get Request');
+  console.log('Get Request');
 };
 
-exports.post = function(req, res) {
-console.log('Post Request');
+exports.login = function(req, res) {
+  console.log('log in!');
 };
